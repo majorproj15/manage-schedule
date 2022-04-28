@@ -13,7 +13,7 @@ export class CreateRoleComponent implements OnInit {
 
   @ViewChild('confirmationModal') confirmationModal: ElementRef;
   @ViewChild('disbaleConfirmationModal') disbaleConfirmationModal: ElementRef;
-  
+
 
   form: FormGroup = new FormGroup({});
   selectedPrefrence = []
@@ -67,7 +67,7 @@ export class CreateRoleComponent implements OnInit {
 
     // This will trigger in case of edit rule
     if(this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras && this.router.getCurrentNavigation().extras.state){
-      
+
       // this is edit rule data coming from dashboard
       const stateData = this.router.getCurrentNavigation().extras.state;
       // holidayType: 'test-rule',
@@ -96,10 +96,10 @@ export class CreateRoleComponent implements OnInit {
             this.selectedPrefrence.push(moment(item + '-' + this.selectedYear).format('L'));
           })
         }
-  
+
       } else {
         this.changeMonth(stateData.month);
-        this.changeWeek(stateData.weekOfTheMonth);   
+        this.changeWeek(stateData.weekOfTheMonth);
         this.changeDay(stateData.dayOfTheWeek);
 
         this.selectedPrefrence = []
@@ -116,7 +116,7 @@ export class CreateRoleComponent implements OnInit {
 
       this.editRule = true;
 
-      
+
     } else {
       this.editRule = false;
     }
@@ -140,7 +140,7 @@ export class CreateRoleComponent implements OnInit {
 
 
   ngOnInit(): void {
-    
+
   }
 
 
@@ -219,7 +219,7 @@ export class CreateRoleComponent implements OnInit {
     this.selectedMonth = '';
   }
 
-  disableRuleConfirm() {    
+  disableRuleConfirm() {
     if(this.createRequestData()) {
       let reqData = this.createRequestData();
       debugger;
@@ -228,7 +228,7 @@ export class CreateRoleComponent implements OnInit {
       reqData['ruleId'] = this.editRuleId;
       this.httpService.updateSelectedRule(reqData).subscribe((res: any) => {
         if (res && res.message === 'HOLIDAY_UPDATED_SUCCESSFULLY') {
-          this.disbaleConfirmationModal.nativeElement.click();          
+          this.disbaleConfirmationModal.nativeElement.click();
           this.router.navigate(['dashboard']);
         }
       }, err => {
@@ -245,7 +245,7 @@ export class CreateRoleComponent implements OnInit {
         reqData['ruleId'] = this.editRuleId;
         this.httpService.updateSelectedRule(reqData).subscribe((res: any) => {
           if (res && res.message === 'HOLIDAY_UPDATED_SUCCESSFULLY') {
-            this.disbaleConfirmationModal.nativeElement.click();          
+            this.disbaleConfirmationModal.nativeElement.click();
             this.router.navigate(['dashboard']);
           }
         }, err => {
@@ -318,7 +318,7 @@ export class CreateRoleComponent implements OnInit {
 
     let startDate = moment(year + '-' + month + '-01'); //YYYY-MM-DD
     const lastDateOfMonth = startDate.daysInMonth();
-    let endDate = moment(year + '-' + month + '-' + lastDateOfMonth); //YYYY-MM-DD 
+    let endDate = moment(year + '-' + month + '-' + lastDateOfMonth); //YYYY-MM-DD
     let arr = new Array();
     let dt = new Date(startDate.format('L'));
     while (dt <= new Date(endDate.format('L'))) {
