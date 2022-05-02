@@ -89,15 +89,15 @@
         
         <button type="button" (click)="cancel()" class="btn btn-secondary">Clear</button>
         <button type="button" *ngIf="editRule" data-bs-toggle="modal" data-bs-target="#disbaleConfirmationModal" class="btn btn-dark">Disable Rule</button>
-        <button type="button" *ngIf="flexibleDates" [disabled]="!(selectedDateList && selectedDateList.length > 0)" data-bs-toggle="modal" data-bs-target="#confirmationPopup"
+        <button type="button" *ngIf="flexibleDates" [disabled]="!(selectedDateList && selectedDateList.length > 0)" data-bs-toggle="modal" data-bs-target="#confirmationModal"
             class="btn btn-dark"><span *ngIf="editRule">Update Rule</span><span *ngIf="!editRule">Save Rule</span></button>
-        <button type="button" *ngIf="!flexibleDates" [disabled]="!(selectedMonth && selectedWeek && selectedDay)" data-bs-toggle="modal" data-bs-target="#confirmationPopup"
+        <button type="button" *ngIf="!flexibleDates" [disabled]="!(selectedMonth && selectedWeek && selectedDay)" data-bs-toggle="modal" data-bs-target="#confirmationModal"
                 class="btn btn-dark"><span *ngIf="editRule">Update Rule</span><span *ngIf="!editRule">Save Rule</span></button>
     </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="confirmationPopup" #confirmationModal tabindex="-1" aria-labelledby="confirmationPopup" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" #confirmationModal tabindex="-1" aria-labelledby="confirmationModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

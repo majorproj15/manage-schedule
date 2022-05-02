@@ -81,7 +81,12 @@ export class ExampleSectionComponent implements OnInit, OnChanges {
     if(changes.prefrence && changes.prefrence.currentValue && changes.prefrence.currentValue.length > 0) {
       changes.prefrence.currentValue.forEach(item => {
         if(moment(item).isValid()) {
-          this.prefrences.push(moment(item))
+          if(this.customDateSelection) {
+            this.prefrences.push(moment(item));
+          } else {
+            this.prefrences = [];
+            this.prefrences.push(moment(item));
+          }
         }
       })
     }
@@ -110,16 +115,17 @@ export class ExampleSectionComponent implements OnInit, OnChanges {
     return mandaydates;
   }
 
-  yearChanged($event: any) {
+  yearChanged($event: any) 
+  {
     this.calendarDate = new Date($event, this.calendarDate.getMonth(), this.calendarDate.getDate());
     this.sendYearChanged.emit(this.calendarDate);
   }
 
   dayClicked($event: any) {
-    const findIndex = this.finalSelectedDates.find(item => moment(item).format('L') === moment($event.day.date).format('L'));
+    const findIndex = this.finalSelectedDates.findIndex(item => moment(item).format('L') === moment($event.day.date).format('L'));
     if(findIndex > -1) {
       this.finalSelectedDates = this.finalSelectedDates.filter(item => {
-        return item !== $event.day.date ? true : false;
+        return moment(item).format('L') !== moment($event.day.date).format('L') ? true : false;
       })
     } else {
       this.finalSelectedDates.push(new Date($event.day.date));

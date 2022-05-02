@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
     goToCreateRule(row) {
       this.httpService.getRuleDetails(row.id).subscribe((res: any) => {
         if (res) {
-          debugger;
+           
           this.router.navigate(['create-rule'], {state: row});
         }
       }, err => {
