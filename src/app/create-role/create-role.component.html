@@ -29,7 +29,12 @@
 
         <mat-form-field appearance="fill">
             <mat-label>Select Month</mat-label>
-            <mat-select [disableOptionCentering]="true" [disabled]="flexibleDates" (ngModelChange)="changeMonth($event)" [(ngModel)]="selectedMonth">
+            <mat-select [disableOptionCentering]="true" #monthSelect multiple [disabled]="flexibleDates" (ngModelChange)="changeMonth($event)" [(ngModel)]="selectedMonth">
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="allMonthSelected"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (change)="toggleAllMonthSelection()">Select All</mat-checkbox>
+                </div>
                 <mat-option *ngFor="let month of monthList" [value]="month.value">
                     {{month.display}}
                 </mat-option>
@@ -42,7 +47,12 @@
 
         <mat-form-field appearance="fill">
             <mat-label>Select Week of Month</mat-label>
-            <mat-select [disableOptionCentering]="true" [disabled]="selectedDate || !(dateList && dateList.length > 0)  || flexibleDates" (ngModelChange)="changeWeek($event)" [(ngModel)]="selectedWeek">
+            <mat-select [disableOptionCentering]="true" #weekSelect multiple [disabled]="!(selectedMonth && selectedMonth.length > 0)  || flexibleDates" (ngModelChange)="changeWeek($event)" [(ngModel)]="selectedWeek">
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="allWeekSelected"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (change)="toggleAllWeekSelection()">Select All</mat-checkbox>
+                </div>
                 <mat-option *ngFor="let week of weekList" [value]="week">
                     {{week}}
                 </mat-option>
@@ -56,7 +66,12 @@
 
         <mat-form-field appearance="fill">
             <mat-label>Select Day of Week</mat-label>
-            <mat-select [disableOptionCentering]="true" [disabled]="selectedDate || !(dateList && dateList.length > 0) || flexibleDates" (ngModelChange)="changeDay($event)" [(ngModel)]="selectedDay">
+            <mat-select [disableOptionCentering]="true" #daySelect multiple [disabled]="!(selectedMonth && selectedMonth.length > 0) || flexibleDates" (ngModelChange)="changeDay($event)" [(ngModel)]="selectedDay">
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="allDaySelected"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (change)="toggleAllDaySelection()">Select All</mat-checkbox>
+                </div>
                 <mat-option *ngFor="let day of dayList" [value]="day.value">
                     {{day.display}}
                 </mat-option>
@@ -67,7 +82,7 @@
 
     <div class="col-2">
         <button type="button" (click)="reset()" class="btn btn-secondary">Reset</button>
-        <button type="button" (click)="apply()" [disabled]="!selectedMonth || !selectedWeek || !selectedDay" class="btn btn-dark ms-2">Preview</button>
+        <button type="button" (click)="apply()" [disabled]="!(selectedMonth && selectedMonth.length > 0) || !(selectedWeek && selectedWeek.length > 0) || !(selectedDay && selectedDay.length > 0)" class="btn btn-dark ms-2">Preview</button>
     </div>
 
 

@@ -13,12 +13,12 @@
 
     </div>
 
-    <div class="col-3">
+    <div class="col-2">
 
       <mat-form-field appearance="fill">
-        <mat-label>Select Rule</mat-label>
+        <mat-label>Select Rule to include</mat-label>
         <mat-select [disableOptionCentering]="true" multiple (ngModelChange)="changePrefrence($event)" [(ngModel)]="selectedPrefrence">
-          <mat-option *ngFor="let prefrence of prefrenceList" [value]="prefrence.name">
+          <mat-option *ngFor="let prefrence of prefrenceListToInclude" [value]="prefrence.name">
             {{prefrence.name}}
           </mat-option>
         </mat-select>
@@ -26,9 +26,23 @@
 
     </div>
 
-    <div class="col-7" >
+    <div class="col-2">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Select Rule to exclude</mat-label>
+        <mat-select [disableOptionCentering]="true" multiple (ngModelChange)="changePrefrenceToExclude($event)" [(ngModel)]="selectedPrefrenceToExclude">
+          <mat-option *ngFor="let prefrence of prefrenceListToExclude" [value]="prefrence.name">
+            {{prefrence.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-6" >
       <div class="box">
         <span class="tube" *ngFor="let prefrence of selectedPrefrence"> {{prefrence}} <a href="javascript:void(0)" class="close" (click)="remove(prefrence)">&#10006;</a></span>
+        <span class="tube-exclude" *ngFor="let prefrence of selectedPrefrenceToExclude"> {{prefrence}} <a href="javascript:void(0)" class="close" (click)="removeExcluded(prefrence)">&#10006;</a></span>
       </div>
     </div>
   </div>
@@ -37,7 +51,7 @@
   <div class="row">
     <div class="col-12">
       <div class="card-container">
-        <ycd-example-section (sendYearChanged)="sendYearChanged($event)" [year]="selectedYear" [prefrence]="selectedPrefrenceList" (dateSelected)="dateSelected($event)" >
+        <ycd-example-section (sendYearChanged)="sendYearChanged($event)" [year]="selectedYear" [prefrenceExclude]="selectedPrefrenceListToExclude" [prefrence]="selectedPrefrenceList" (dateSelected)="dateSelected($event)" >
         </ycd-example-section>
       </div>
     </div>

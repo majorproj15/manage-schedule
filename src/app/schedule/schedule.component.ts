@@ -22,9 +22,15 @@ export class ScheduleComponent implements OnInit {
   selectedYear = 2022;
 
   prefrenceList = []
+  prefrenceListToInclude = [];
+  prefrenceListToExclude = [];
 
   selectedPrefrence = []
   selectedPrefrenceList = [];
+
+  selectedPrefrenceToExclude = [];
+  selectedPrefrenceListToExclude = [];
+
   constructor(private httpService: HttpService, private fb: FormBuilder) {
     this.form = fb.group({
       name: ['', [Validators.required]]
@@ -45,6 +51,18 @@ export class ScheduleComponent implements OnInit {
             dates: res[item].split(',')
           })
         })
+        this.prefrenceList.push({
+          name: 'April all monday',
+          dates: ['2022-04-04', '2022-04-11', '2022-04-18', '2022-04-25']
+        })
+
+        this.prefrenceList.push({
+          name: 'April exclude 11',
+          dates: ['2022-04-11']
+        })
+
+        this.prefrenceListToInclude = [...this.prefrenceList];
+        this.prefrenceListToExclude = [...this.prefrenceList];
       }
     }, err => {
       console.error(err);
@@ -71,6 +89,19 @@ export class ScheduleComponent implements OnInit {
       }
     })
 
+    this.prefrenceListToExclude = this.prefrenceList.filter(item => !prefrence.includes(item.name));
+  }
+
+  changePrefrenceToExclude(prefrence) {
+    this.selectedPrefrenceToExclude = prefrence;
+    this.selectedPrefrenceListToExclude = [];
+    this.selectedPrefrenceToExclude.forEach(item => {
+      if(item) {
+        this.selectedPrefrenceListToExclude = [...this.selectedPrefrenceListToExclude ,...(this.prefrenceList.find(val => val.name === item).dates)]
+      }
+    })
+
+    this.prefrenceListToInclude = this.prefrenceList.filter(item => !prefrence.includes(item.name));
   }
 
   sendYearChanged(year) {
@@ -85,25 +116,41 @@ export class ScheduleComponent implements OnInit {
 
   remove(prefrence) {
     this.selectedPrefrence = this.selectedPrefrence.filter(item => item !== prefrence);
+
+    this.selectedPrefrenceList = [];
+    this.selectedPrefrence.forEach(item => {
+      if(item) {
+        this.selectedPrefrenceList = [...this.selectedPrefrenceList ,...(this.prefrenceList.find(val => val.name === item).dates)]
+      }
+    })
+
+    this.selectedPrefrenceListToExclude = [];
+    this.selectedPrefrenceToExclude.forEach(item => {
+      if(item) {
+        this.selectedPrefrenceListToExclude = [...this.selectedPrefrenceListToExclude ,...(this.prefrenceList.find(val => val.name === item).dates)]
+      }
+    })
+  }
+
+  removeExcluded(prefrence) {
+    this.selectedPrefrenceToExclude = this.selectedPrefrenceToExclude.filter(item => item !== prefrence);
+
+    this.selectedPrefrenceList = [];
+    this.selectedPrefrence.forEach(item => {
+      if(item) {
+        this.selectedPrefrenceList = [...this.selectedPrefrenceList ,...(this.prefrenceList.find(val => val.name === item).dates)]
+      }
+    })
+
+    this.selectedPrefrenceListToExclude = [];
+    this.selectedPrefrenceToExclude.forEach(item => {
+      if(item) {
+        this.selectedPrefrenceListToExclude = [...this.selectedPrefrenceListToExclude ,...(this.prefrenceList.find(val => val.name === item).dates)]
+      }
+    })
   }
 
   save() {
-    // let allDates = this.getDateArray(this.selectedYear);
-    // this.selectedDateList;
-
-    // let dateToSumbit = [];
-
-    // allDates.forEach(date => {
-    //   if(this.selectedDateList.find(item => moment(item).format('L') === moment(date).format('L'))) {
-    //     const obj = {};
-    //     obj[moment(date).format("L")] = 'Y';
-    //     dateToSumbit.push(obj)
-    //   } else {
-    //     const obj = {};
-    //     obj[moment(date).format("L")] = 'N';
-    //     dateToSumbit.push(obj)
-    //   }
-    // })
     this.httpService.getRuleIds().subscribe((ruleIds: any) => {
       if (ruleIds ) {
         

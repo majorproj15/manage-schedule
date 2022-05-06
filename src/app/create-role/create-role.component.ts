@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { HttpService } from '../services/http.service';
@@ -26,35 +28,41 @@ export class CreateRoleComponent implements OnInit {
   ]
   selectedYear = 2022;
   monthList = [
-    { display: 'January', value: '01' },
-    { display: 'February', value: '02' },
-    { display: 'March', value: '03' },
-    { display: 'April', value: '04' },
-    { display: 'May', value: '05' },
-    { display: 'June', value: '06' },
-    { display: 'July', value: '07' },
-    { display: 'August', value: '08' },
-    { display: 'September', value: '09' },
-    { display: 'October', value: '10' },
-    { display: 'November', value: '11' },
-    { display: 'December', value: '12' }
+    { display: 'January', value: 1 },
+    { display: 'February', value: 2 },
+    { display: 'March', value: 3 },
+    { display: 'April', value: 4 },
+    { display: 'May', value: 5 },
+    { display: 'June', value: 6 },
+    { display: 'July', value: 7 },
+    { display: 'August', value: 8 },
+    { display: 'September', value: 9 },
+    { display: 'October', value: 10 },
+    { display: 'November', value: 11 },
+    { display: 'December', value: 12 }
   ]
   selectedMonth = null;
+  @ViewChild('monthSelect') monthSelect: MatSelect;
+  allMonthSelected=false;
 
   dateList = [];
   selectedDate = null;
+  @ViewChild('weekSelect') weekSelect: MatSelect;
+  allWeekSelected=false;
 
-  weekList = [1, 2, 3, 4];
+  weekList = [1, 2, 3, 4, 5];
   selectedWeek = null;
+  @ViewChild('daySelect') daySelect: MatSelect;
+  allDaySelected=false;
 
   dayList = [
-    { display: 'Monday', value: '01' },
-    { display: 'Tuesday', value: '02' },
-    { display: 'Wednesday', value: '03' },
-    { display: 'Thursday', value: '04' },
-    { display: 'Friday', value: '05' },
-    { display: 'Saturday', value: '06' },
-    { display: 'Sunday', value: '07' },
+    { display: 'Monday', value: 1 },
+    { display: 'Tuesday', value: 2 },
+    { display: 'Wednesday', value: 3 },
+    { display: 'Thursday', value: 4 },
+    { display: 'Friday', value: 5 },
+    { display: 'Saturday', value: 6 },
+    { display: 'Sunday', value: 7 },
   ];
   selectedDay = null;
 
@@ -103,13 +111,15 @@ export class CreateRoleComponent implements OnInit {
         // this.changeDay(stateData.dayOfTheWeek);
 
         if(stateData.month) {
-          this.changeMonth(this.monthList.find(item => item.display.toUpperCase() == stateData.month).value);
+          // this.changeMonth(this.monthList.find(item => item.display.toUpperCase() == stateData.month).value);
+          this.changeMonth(stateData.month);
         }
 
-        this.changeWeek(+stateData.weekOfTheMonth);
+        this.changeWeek(stateData.weekOfTheMonth);
   
         if(stateData.dayOfTheWeek) {
-          this.changeDay(this.dayList.find(item => item.display.toUpperCase() == stateData.dayOfTheWeek).value);
+          // this.changeDay(this.dayList.find(item => item.display.toUpperCase() == stateData.dayOfTheWeek).value);
+          this.changeDay(stateData.dayOfTheWeek);
         }
 
         this.selectedPrefrence = []
@@ -172,10 +182,27 @@ export class CreateRoleComponent implements OnInit {
     this.selectedDate = null;
     this.selectedWeek = null;
     this.selectedDay = null;
-    const dates = this.getDateArray(this.selectedYear, this.selectedMonth);
-    dates.forEach(date => {
-      this.dateList.push(moment(date).format('L'));
-    })
+    // const dates = this.getDateArray(this.selectedYear, this.selectedMonth);
+    // dates.forEach(date => {
+    //   this.dateList.push(moment(date).format('L'));
+    // })
+
+
+    let status = true;
+    this.monthSelect.options.forEach((item: MatOption) => {
+      if (!item.selected) {
+        status = false;
+      }
+    });
+    this.allMonthSelected = status;
+  }
+
+  toggleAllMonthSelection() {
+    if (this.allMonthSelected) {
+      this.monthSelect.options.forEach((item: MatOption) => item.select());
+    } else {
+      this.monthSelect.options.forEach((item: MatOption) => item.deselect());
+    }
   }
 
   changeDate(date) {
@@ -185,13 +212,43 @@ export class CreateRoleComponent implements OnInit {
   }
 
   changeWeek(week) {
-    this.selectedWeek = week;
+    this.selectedWeek = (week && week.length > 0) ? week: null;
     this.selectedDate = null;
+    let status = true;
+    this.weekSelect.options.forEach((item: MatOption) => {
+      if (!item.selected) {
+        status = false;
+      }
+    });
+    this.allWeekSelected = status;
+  }
+
+  toggleAllWeekSelection() {
+    if (this.allWeekSelected) {
+      this.weekSelect.options.forEach((item: MatOption) => item.select());
+    } else {
+      this.weekSelect.options.forEach((item: MatOption) => item.deselect());
+    }
   }
 
   changeDay(day) {
-    this.selectedDay = day;
+    this.selectedDay = (day && day.length > 0)? day: null;
     this.selectedDate = null;
+    let status = true;
+    this.daySelect.options.forEach((item: MatOption) => {
+      if (!item.selected) {
+        status = false;
+      }
+    });
+    this.allDaySelected = status;
+  }
+
+  toggleAllDaySelection() {
+    if (this.allDaySelected) {
+      this.daySelect.options.forEach((item: MatOption) => item.select());
+    } else {
+      this.daySelect.options.forEach((item: MatOption) => item.deselect());
+    }
   }
 
   reset() {
@@ -201,23 +258,32 @@ export class CreateRoleComponent implements OnInit {
   }
 
   apply() {
-    const reqData = {
-      year: this.selectedYear,
-      dayOfTheMonth: 0,
-      dayOfTheWeek: this.dayList.find(item => (item.display.toUpperCase() === this.selectedDay) || (item.value === this.selectedDay)).display.toUpperCase(),
-      month: this.monthList.find(item => (item.display.toUpperCase() === this.selectedMonth) || (item.value === this.selectedMonth)).display.toUpperCase(),
-      weekOfTheMonth: this.selectedWeek
-    }
-    this.httpService.getSelectedDate(reqData).subscribe((res: any) => {
-      if (res) {
+
+    const req = [];
+
+    this.selectedMonth.forEach(month => {
+      this.selectedWeek.forEach(week => {
+        this.selectedDay.forEach(day => {
+          req.push({
+            year: this.selectedYear,
+            dayOfTheMonth: 0,      
+            dayOfTheWeek: day,
+            month: month,
+            weekOfTheMonth: week
+          })
+        })
+      })
+    })
+
+    this.httpService.getSelectedDate(req).subscribe((res: any) => {
+      if (res && res.length > 0) {
         this.selectedPrefrence = [];
-        this.selectedPrefrence = [moment(res).format('L')];
+        res.forEach(item => {
+          this.selectedPrefrence.push(moment(item).format('L'));
+        })
       }
     }, err => {
       console.error(err);
-
-      // const date = new Date();
-      // this.selectedPrefrence = [moment(date).format('L')];
     })
 
   }
@@ -235,15 +301,8 @@ export class CreateRoleComponent implements OnInit {
       let reqData = this.createRequestData();
        
       // check for reqData
-      reqData.isActive = false;
+      reqData.isActive = 'IN_ACTIVE';
       reqData['id'] = this.editRuleId;
-      if(reqData.month) {
-        reqData.month = this.monthList.find(item => item.value == reqData.month).display.toUpperCase();
-      }
-
-      if(reqData.dayList) {
-        reqData.month = this.dayList.find(item => item.value == reqData.dayOfTheWeek).display.toUpperCase();
-      }
 
       this.httpService.updateSelectedRule(reqData).subscribe((res: any) => {
         if (res && res.message === 'HOLIDAY_UPDATED_SUCCESSFULLY') {
@@ -261,15 +320,14 @@ export class CreateRoleComponent implements OnInit {
       let reqData = this.createRequestData();
       if (this.editRuleId) {
         // Update rule
-        reqData['id'] = this.editRuleId;
+        if (this.flexibleDates) {
+          reqData['id'] = this.editRuleId;
+        } else {
+          reqData.forEach(req => {
+            req['id'] = this.editRuleId;
+          })
+        }
 
-        if(reqData.month) {
-          reqData.month = this.monthList.find(item => item.value == reqData.month).display.toUpperCase();
-        }
-  
-        if(reqData.dayList) {
-          reqData.month = this.dayList.find(item => item.value == reqData.dayOfTheWeek).display.toUpperCase();
-        }
         this.httpService.updateSelectedRule(reqData).subscribe((res: any) => {
           if (res && res.message === 'HOLIDAY_UPDATED_SUCCESSFULLY') {
             this.confirmationModal.nativeElement.click();
@@ -307,7 +365,7 @@ export class CreateRoleComponent implements OnInit {
           customDays: "",
           createdUser: 'User',
           lastModifiedUser: 'User',
-          isActive: true
+          isActive: 'ACTIVE'
         }
         this.selectedDateList.forEach(item => {
           if (reqData.customDays === '') {
@@ -317,20 +375,31 @@ export class CreateRoleComponent implements OnInit {
           }
         })
 
-      } else {
-        reqData = {
-          holidayType: this.form.value.name,
-          month: this.selectedMonth,
-          dayOfTheMonth: '',
-          dayOfTheWeek: this.selectedDay,
-          weekOfTheMonth: this.selectedWeek,
-          customDays: "",
-          createdUser: 'User',
-          lastModifiedUser: 'User',
-          isActive: true
-        }
+        return reqData;
+
+      } else {        
+        const req = [];
+
+        this.selectedMonth.forEach(month => {
+          this.selectedWeek.forEach(week => {
+            this.selectedDay.forEach(day => {
+              req.push({
+
+                holidayType: this.form.value.name,
+                month: month,
+                dayOfTheMonth: '',
+                dayOfTheWeek: day,
+                weekOfTheMonth: week,
+                customDays: "",
+                createdUser: 'User',
+                lastModifiedUser: 'User',
+                isActive: 'ACTIVE'
+              })
+            })
+          })
+        })
+        return req;
       }
-      return reqData;
     } else {
       return false;
     }
