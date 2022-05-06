@@ -51,7 +51,7 @@
   <div class="row">
     <div class="col-12">
       <div class="card-container">
-        <ycd-example-section (sendYearChanged)="sendYearChanged($event)" [year]="selectedYear" [prefrenceExclude]="selectedPrefrenceListToExclude" [prefrence]="selectedPrefrenceList" (dateSelected)="dateSelected($event)" >
+        <ycd-example-section [customDateSelection]="false" (sendYearChanged)="sendYearChanged($event)" [year]="selectedYear" [prefrenceExclude]="selectedPrefrenceListToExclude" [prefrence]="selectedPrefrenceList" (dateSelected)="dateSelected($event)" >
         </ycd-example-section>
       </div>
     </div>

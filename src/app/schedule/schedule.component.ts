@@ -38,7 +38,34 @@ export class ScheduleComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.fetchHolidayList(this.selectedYear);
+
+    // ***************************
+
+    // this.prefrenceList = [
+    //   {
+    //     name: 'April all monday',
+    //     dates: ['2022-04-04', '2022-04-11', '2022-04-18', '2022-04-25']
+    //   },
+    //   {
+    //     name: 'April exclude 11',
+    //     dates: ['2022-04-11']
+    //   },
+    //   {
+    //     name: 'March all monday',
+    //     dates: ['2022-03-07', '2022-03-14', '2022-03-21', '2022-03-28']
+    //   },
+    //   {
+    //     name: 'March exclude 14',
+    //     dates: ['2022-03-14']
+    //   }
+    // ]
+
+    // this.prefrenceListToInclude = [...this.prefrenceList];
+    // this.prefrenceListToExclude = [...this.prefrenceList];
+
+    // ***************************
+
+    // this.fetchHolidayList(this.selectedYear);
   }
 
   fetchHolidayList(selectedYear) {
@@ -82,24 +109,14 @@ export class ScheduleComponent implements OnInit {
 
   changePrefrence(prefrence) {
     this.selectedPrefrence = prefrence;
-    this.selectedPrefrenceList = [];
-    this.selectedPrefrence.forEach(item => {
-      if(item) {
-        this.selectedPrefrenceList = [...this.selectedPrefrenceList ,...(this.prefrenceList.find(val => val.name === item).dates)]
-      }
-    })
+    this.updateCalender();
 
     this.prefrenceListToExclude = this.prefrenceList.filter(item => !prefrence.includes(item.name));
   }
 
   changePrefrenceToExclude(prefrence) {
     this.selectedPrefrenceToExclude = prefrence;
-    this.selectedPrefrenceListToExclude = [];
-    this.selectedPrefrenceToExclude.forEach(item => {
-      if(item) {
-        this.selectedPrefrenceListToExclude = [...this.selectedPrefrenceListToExclude ,...(this.prefrenceList.find(val => val.name === item).dates)]
-      }
-    })
+    this.updateCalender();
 
     this.prefrenceListToInclude = this.prefrenceList.filter(item => !prefrence.includes(item.name));
   }
@@ -116,25 +133,17 @@ export class ScheduleComponent implements OnInit {
 
   remove(prefrence) {
     this.selectedPrefrence = this.selectedPrefrence.filter(item => item !== prefrence);
-
-    this.selectedPrefrenceList = [];
-    this.selectedPrefrence.forEach(item => {
-      if(item) {
-        this.selectedPrefrenceList = [...this.selectedPrefrenceList ,...(this.prefrenceList.find(val => val.name === item).dates)]
-      }
-    })
-
-    this.selectedPrefrenceListToExclude = [];
-    this.selectedPrefrenceToExclude.forEach(item => {
-      if(item) {
-        this.selectedPrefrenceListToExclude = [...this.selectedPrefrenceListToExclude ,...(this.prefrenceList.find(val => val.name === item).dates)]
-      }
-    })
+    this.updateCalender();
+    this.prefrenceListToExclude.push(this.prefrenceList.find(item => item.name === prefrence));
   }
 
   removeExcluded(prefrence) {
     this.selectedPrefrenceToExclude = this.selectedPrefrenceToExclude.filter(item => item !== prefrence);
+    this.updateCalender();    
+    this.prefrenceListToInclude.push(this.prefrenceList.find(item => item.name === prefrence));
+  }
 
+  updateCalender() {
     this.selectedPrefrenceList = [];
     this.selectedPrefrence.forEach(item => {
       if(item) {
